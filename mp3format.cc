@@ -21,16 +21,29 @@
 
 
 
-DEFUN_DLD(mp3init, args, nargout,
-          "Initialize the mpg123 library.")
+DEFUN_DLD(mp3format, args, nargout,
+	  "Get format of open mp3 file [rate, channels, encoding].")
 {
+  long mp3rate;
+  int mp3channels;
+  int mp3encoding;
+
   const int nargin = args.length();
   octave_value_list retval;
-  
-  if( mpg123_init() != MPG123_OK )
+
+  if( nargin!=1 ) 
     {
-      error("Initialization of mpg123 failed");
+      error("Need mh* parameter");
     }
+
+  mpg123_handle *mh = (mpg123_handle *) args(0).long_value();
+  if( mpg123_getformat(mh, &mp3rate, &mp3channels, &mp3encoding) != MPG123_OK )
+    {
+      error("Cannot read format.");
+    }
+  retval(2)= octave_value(mp3rate);
+  retval(1)= octave_value(mp3channels);
+  retval(0)= octave_value(mp3encoding);
   return retval;
 }
 

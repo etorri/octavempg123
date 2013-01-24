@@ -21,16 +21,23 @@
 
 
 
-DEFUN_DLD(mp3init, args, nargout,
-          "Initialize the mpg123 library.")
+
+DEFUN_DLD(mp3close, args, nargout,
+	  "Close mp3 file handle.")
 {
   const int nargin = args.length();
   octave_value_list retval;
-  
-  if( mpg123_init() != MPG123_OK )
+
+  if( nargin!=1 ) 
     {
-      error("Initialization of mpg123 failed");
+      error("Need mh* parameter");
+      return retval;
     }
+
+  mpg123_handle *mh = (mpg123_handle *) args(0).long_value();
+  mpg123_close(mh);
+  mpg123_delete(mh);
   return retval;
 }
+
 
